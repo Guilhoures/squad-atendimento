@@ -100,3 +100,61 @@ struct PilhaHistorico {
         while (!isEmpty()) pop();
     }
 };
+
+struct ListaMedicos {
+    No* head = nullptr;
+
+   
+    void adicionarMedico(const string& nome) {
+        No* novo = new No(nome);
+        if (head == nullptr) {
+            head = novo;
+        } else {
+            No* atual = head;
+            while (atual->prox != nullptr) {
+                atual = atual->prox;
+            }
+            atual->prox = novo;
+        }
+    }
+
+    
+    string chamarMedico() {
+        if (head == nullptr) return "";
+        
+        No* temp = head;
+        string nome = temp->nome;
+        head = head->prox;
+        
+        delete temp;
+        return nome;
+    }
+
+   
+    void percorrer(const string& prefixo = "") const {
+        if (!prefixo.empty()) cout << prefixo << ": ";
+        
+        if (head == nullptr) {
+            cout << "(lista vazia)\n";
+            return;
+        }
+        
+        No* atual = head;
+        while (atual != nullptr) {
+            cout << atual->nome;
+            if (atual->prox != nullptr) cout << " -> ";
+            atual = atual->prox;
+        }
+        cout << "\n";
+    }
+
+    bool temMedico() const { return head != nullptr; }
+
+    ~ListaMedicos() {
+        while (head) {
+            No* t = head;
+            head  = head->prox;
+            delete t;
+        }
+    }
+};
