@@ -158,3 +158,73 @@ struct ListaMedicos {
         }
     }
 };
+void imprimirHistorico(PilhaHistorico& hist) {
+    cout << "\n=== Relatório de Atendimentos ===\n";
+    if (hist.isEmpty()) {
+        cout << "(nenhum atendimento registrado)\n";
+        return;
+    }
+    
+    PilhaHistorico aux;
+    
+    while (!hist.isEmpty()) {
+        string registro = hist.pop();
+        cout << "- " << registro << "\n";
+        aux.push(registro);
+    }
+    
+    while (!aux.isEmpty()) {
+        hist.push(aux.pop());
+    }
+}
+
+
+
+int main() {
+    cout << "╔═══════════════════════════════════════════════════╗\n";
+    cout << "║  Sistema de Atendimento — Squad ________________  ║\n";
+    cout << "╚═══════════════════════════════════════════════════╝\n\n";
+
+    
+    FilaPacientes  fila;
+    PilhaHistorico historico;
+    ListaMedicos   medicos;
+
+   
+    medicos.adicionarMedico("Dra. Ana Lima");
+    medicos.adicionarMedico("Dr. Bruno Costa");
+    medicos.adicionarMedico("Dra. Carla Ramos");
+    medicos.percorrer("Médicos disponíveis");
+
+    
+    cout << "\nPacientes chegando:\n";
+    fila.enqueue("Eduardo (urgencia=3)", 3);
+    fila.enqueue("Fernanda (urgencia=1)", 1);
+    fila.enqueue("Gabriel (urgencia=2)", 2);
+    fila.enqueue("Helena (urgencia=1)", 1);
+
+    cout << "Próximo a ser atendido: " << fila.frente_peek() << "\n";
+    cout << "Total na fila: " << fila.tamanho() << "\n";
+
+    
+    cout << "\nSimulação de atendimentos:\n";
+    int atend = 1;
+    while (!fila.isEmpty() && medicos.temMedico()) {
+        string paciente = fila.dequeue();
+        string medico   = medicos.chamarMedico();
+
+        cout << "  [" << atend++ << "] " << medico
+             << " atende " << paciente << "\n";
+
+        
+        historico.push(medico + " → " + paciente);
+
+        
+        medicos.adicionarMedico(medico);
+    }
+
+    
+    cout << "\nÚltimo atendimento registrado (peek): " << historico.peek() << "\n";
+
+    
+    imprimirHistorico(historico);}
